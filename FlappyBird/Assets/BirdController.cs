@@ -12,11 +12,16 @@ public class BirdController : MonoBehaviour
 
     public GameObject GameOverPanel;
     public TextMeshProUGUI PointsTextureField;
+    public TextMeshProUGUI HighscorePointsTextureField;
+
+
     public AudioSource audioSource;
 
     public AudioClip hitSfx;
     public AudioClip jumpSfx;
     public AudioClip scoreSfx;
+
+    public Animator Anim;
 
     public static bool GameOver;
     public static bool HasStarted;
@@ -42,6 +47,7 @@ public class BirdController : MonoBehaviour
             audioSource.clip = jumpSfx;
             audioSource.Play();
 
+            Anim.SetTrigger("FlapWings");
 
             if (HasStarted == false)
             {
@@ -60,7 +66,19 @@ public class BirdController : MonoBehaviour
 
         audioSource.clip = hitSfx;
         audioSource.Play();
+
+        var currentHighscore = PlayerPrefs.GetInt("CDV_Highscore");
+
+        if(currentHighscore < Points)
+        {
+            PlayerPrefs.SetInt("CDV_Highscore", Points);
+            currentHighscore = Points;
+        }
+
+        HighscorePointsTextureField.text = currentHighscore.ToString();
+        
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Points++;
